@@ -38,4 +38,3 @@ public class UserModel {
 	private String uf;
 
 }
-
