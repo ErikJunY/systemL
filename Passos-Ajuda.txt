@@ -1,0 +1,14 @@
+Em contexto de MIGRAÇÃO 
+	Para manter o nível profissional e o controle de versão do banco (essencial para Sêniores), 
+utilizamos o Flyway ou o Liquibase. Eles funcionam de forma similar ao Alembic: você cria scripts 
+.sql e o Spring os executa ao subir a aplicação, garantindo que o banco no Supabase esteja sempre sincronizado.
+
+
+Usando LOMBOK para evitar "boilerplate"
+	Que é aquele código "obrigatório" que não carrega a lógica principal do seu negócio ((getters/setters manuais) e as 
+anotações do Jakarta Persistence.), mas que o sistema exige para funcionar. No Java tradicional, isso é muito comum. 
+	Usamos o @Data para isso, para nao ter a necessidade de usar tudo aquilo do getter e setter
+
+
+Uso de validalção com o LOMBOK
+	Usamos o lombok para validar email com @Email
