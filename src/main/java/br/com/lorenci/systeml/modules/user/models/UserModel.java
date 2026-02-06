@@ -1,21 +1,19 @@
 package br.com.lorenci.systeml.modules.user.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
+@Entity
 @Table(name = "tb_users")
 public class UserModel {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //Usado em java para persistencia do ID e fazer um autoincremento na base de dados
 	private Long id;
-	
+
 	@Column(name = "administrador")
 	private Boolean administrador;
 	
@@ -26,12 +24,21 @@ public class UserModel {
 	private Integer numeroResidencial;
 
     @Email(message = "O campo deve conter um email válido")
+    @Column(unique = true)
 	private String email;
 
+    @NotBlank
     private String nome;
+
+    @NotBlank
 	private String senha;
+
 	private String sexo;
+
+    @NotBlank
+    @Column(unique = true)
 	private String cpf;
+
 	private String cep;
 	private String rua;
 	private String cidade;
