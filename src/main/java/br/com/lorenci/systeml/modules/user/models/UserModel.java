@@ -5,17 +5,15 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-import java.util.UUID;
-
 @Data
 @Entity
 @Table(name = "tb_users")
 public class UserModel {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.UUID) //Usado em java para persistencia do ID e fazer um autoincremento na base de dados
-	private UUID id;
-	
+	@GeneratedValue(strategy = GenerationType.IDENTITY) //Usado em java para persistencia do ID e fazer um autoincremento na base de dados
+	private Long id;
+
 	@Column(name = "administrador")
 	private Boolean administrador;
 	
