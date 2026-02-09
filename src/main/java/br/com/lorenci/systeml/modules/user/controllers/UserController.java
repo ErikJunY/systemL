@@ -33,10 +33,35 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(users);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}") // user/1
     public ResponseEntity<Optional<UserModel>> getById(@PathVariable Long id) {
-        Optional<UserModel> users = service.findById(id);
+        Optional<UserModel> users = service.findUserById(id);
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(users);
     }
+
+    @GetMapping("/search") // user/search?email=email@email.com POR CONTA DO @RequestParam
+    public ResponseEntity<Optional<UserModel>> getByEmailOrCpf(@RequestParam(required = false) String email,
+                                                          @RequestParam(required = false) String cpf) {
+
+        Optional<UserModel> users = Optional.empty();
+
+        if (email != null) {
+            users = service.findUserByEmail(email);
+        }
+        if (cpf != null) {
+            users = service.findUserByCpf(cpf);
+        }
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(users);
+    }
+
+//    @PutMapping("/{id}")
+//    public ResponseEntity<UserModel> updateUser(@PathVariable Long id,
+//                                                @Valid @RequestBody UserModel userModel) {
+//
+//        Optional<UserModel> users = service.updateUser(id);
+//
+//
+//    }
 }

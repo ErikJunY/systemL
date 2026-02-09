@@ -31,11 +31,37 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<UserModel> findById(Long id) {
-        if (!userRepository.existsById(id)) {
+    public Optional<UserModel> findUserById(Long id) {
+        Optional<UserModel> user = userRepository.findById(id);
+
+        if (user.isEmpty()) {
             throw new ResourceNotFoundException("Usuario nao encontrado");
         }
 
-        return userRepository.findById(id);
+        return user;
     }
+
+    public Optional<UserModel> findUserByEmail(String email) {
+        Optional<UserModel> user = userRepository.findByEmail(email);
+
+        if (user.isEmpty()) {
+            throw new ResourceNotFoundException("Usuario nao encontrado");
+        }
+
+        return user;
+    }
+
+    public Optional<UserModel> findUserByCpf(String cpf) {
+        Optional<UserModel> user = userRepository.findByCpf(cpf);
+
+        if (user.isEmpty()) {
+            throw new ResourceNotFoundException("Usuario nao encontrado");
+        }
+
+        return user;
+    }
+
+//    public Optional<UserModel> updateUser(UserModel userModel) {
+//
+//    }
 }
