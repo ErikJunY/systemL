@@ -13,15 +13,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @ControllerAdvice //permite capturar exceções globalmente e retornar respostas de erro personalizadas sem sobrecarregar a lógica de negócios com tratamento de erros
 public class UserExceptions {
 
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
 
     public UserExceptions(MessageSource messageSource) {
         this.messageSource = messageSource;
@@ -38,26 +35,29 @@ public class UserExceptions {
             dto.add(error);
         });
 
-        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dto);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Map<String, String>> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+    public ResponseEntity<ErrorMessageDto> handleDataIntegrityViolationException(DataIntegrityViolationException ex){
+        String field = "";
 
-        String cause = ex.getMostSpecificCause().getMessage();
+        if (Objects.equals(ex.getMessage(), "CPF ja cadastrado")) {
+            field = "cpf";
+        } else if (Objects.equals(ex.getMessage(), "Email ja cadastrado")) {
+            field = "email";
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessageDto(ex.getMessage(), field));
+    }
 
-        Map<String, String> erros = new HashMap<>();
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorMessageDto> handleResourceNotFoundException(ResourceNotFoundException ex){
+        String field = "";
 
-        if (cause.contains("email")) {
-            erros.put("Email ja cadastrado", "Email");
+        if (Objects.equals(ex.getMessage(), "CPF ja cadastrado")) {
+            field = "cpf";
         }
 
-        if (cause.contains("cpf")) {
-            erros.put("CPF ja cadastrado", "CPF");
-        }
-
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(erros);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessageDto(ex.getMessage(), field));
     }
 }
