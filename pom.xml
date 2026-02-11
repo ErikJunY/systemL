@@ -27,9 +27,18 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>21</java.version>
-	</properties>
+	    <java.version>21</java.version>
+	    <!-- Use environment variables FLYWAY_URL / FLYWAY_USER / FLYWAY_PASSWORD.
+	         Defina-as no Windows (variáveis de ambiente) ou passe via `-Dflyway.url=...` em tempo de execução. -->
+	    <flyway.url>${env.FLYWAY_URL}</flyway.url>
+	    <flyway.user>${env.FLYWAY_USER}</flyway.user>
+	    <flyway.password>${env.FLYWAY_PASSWORD}</flyway.password>
+    </properties>
 	<dependencies>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -94,6 +103,33 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>11.14.1</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>42.7.7</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.flywaydb</groupId>
+                        <artifactId>flyway-database-postgresql</artifactId>
+                        <version>11.14.1</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <url>${flyway.url}</url>
+                    <user>${flyway.user}</user>
+                    <password>${flyway.password}</password>
+                    <locations>
+                        <location>filesystem:src/main/resources/db/migration</location>
+                    </locations>
+                    <baselineOnMigrate>true</baselineOnMigrate>
+                    <baselineVersion>1</baselineVersion>
+                </configuration>
+            </plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

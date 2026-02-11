@@ -4,7 +4,6 @@ import br.com.lorenci.systeml.modules.user.exceptions.ResourceNotFoundException;
 import br.com.lorenci.systeml.modules.user.models.UserModel;
 import br.com.lorenci.systeml.modules.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -61,7 +60,13 @@ public class UserService {
         return user;
     }
 
-//    public Optional<UserModel> updateUser(UserModel userModel) {
-//
-//    }
+    public Optional<UserModel> updateUser(Long id, UserModel userModel) {
+        Optional<UserModel> user = userRepository.findById(id);
+
+        if (user.isEmpty()) {
+            throw new ResourceNotFoundException("Usuario nao encontrado");
+        }
+
+        return user;
+    }
 }

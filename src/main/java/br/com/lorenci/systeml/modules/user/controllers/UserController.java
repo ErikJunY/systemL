@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -42,7 +41,7 @@ public class UserController {
 
     @GetMapping("/search") // user/search?email=email@email.com POR CONTA DO @RequestParam
     public ResponseEntity<Optional<UserModel>> getByEmailOrCpf(@RequestParam(required = false) String email,
-                                                          @RequestParam(required = false) String cpf) {
+            @RequestParam(required = false) String cpf) {
 
         Optional<UserModel> users = Optional.empty();
 
@@ -56,12 +55,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(users);
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<UserModel> updateUser(@PathVariable Long id,
-//                                                @Valid @RequestBody UserModel userModel) {
-//
-//        Optional<UserModel> users = service.updateUser(id);
-//
-//
-//    }
+    @PatchMapping("/{id}")
+    public ResponseEntity<Optional<UserModel>> updateUser(@PathVariable Long id,
+            @Valid @RequestBody UserModel userModel) {
+
+        Optional<UserModel> user = service.updateUser(id, userModel);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+    }
 }

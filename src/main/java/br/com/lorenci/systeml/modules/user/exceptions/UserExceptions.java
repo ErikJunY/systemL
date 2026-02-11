@@ -1,21 +1,19 @@
 package br.com.lorenci.systeml.modules.user.exceptions;
 
-
 import br.com.lorenci.systeml.modules.user.dtos.ErrorMessageDto;
-import ch.qos.logback.core.net.SyslogOutputStream;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.*;
 
-@ControllerAdvice //permite capturar exceções globalmente e retornar respostas de erro personalizadas sem sobrecarregar a lógica de negócios com tratamento de erros
+@ControllerAdvice // permite capturar exceções globalmente e retornar respostas de erro
+                  // personalizadas sem sobrecarregar a lógica de negócios com tratamento de erros
 public class UserExceptions {
 
     private final MessageSource messageSource;
@@ -25,7 +23,7 @@ public class UserExceptions {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<List<ErrorMessageDto>> handleArgumentNotValidException(MethodArgumentNotValidException ex){
+    public ResponseEntity<List<ErrorMessageDto>> handleArgumentNotValidException(MethodArgumentNotValidException ex) {
         List<ErrorMessageDto> dto = new ArrayList<>();
 
         ex.getFieldErrors().forEach((fieldError) -> {
@@ -39,7 +37,7 @@ public class UserExceptions {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ErrorMessageDto> handleDataIntegrityViolationException(DataIntegrityViolationException ex){
+    public ResponseEntity<ErrorMessageDto> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         String field = "";
 
         if (Objects.equals(ex.getMessage(), "CPF ja cadastrado")) {
@@ -51,7 +49,7 @@ public class UserExceptions {
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorMessageDto> handleResourceNotFoundException(ResourceNotFoundException ex){
+    public ResponseEntity<ErrorMessageDto> handleResourceNotFoundException(ResourceNotFoundException ex) {
         String field = "";
 
         if (Objects.equals(ex.getMessage(), "CPF ja cadastrado")) {
