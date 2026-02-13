@@ -60,13 +60,24 @@ public class UserService {
         return user;
     }
 
-    public Optional<UserModel> updateUser(Long id, UserModel userModel) {
-        Optional<UserModel> user = userRepository.findById(id);
+    public UserModel updateUser(Long id, UserModel userModel) {
 
-        if (user.isEmpty()) {
-            throw new ResourceNotFoundException("Usuario nao encontrado");
-        }
+        //Usando expressão Lambda no lugar de uma estrutura de controle tradicional para verificar se o usuário existe e lançar uma exceção caso contrário
+        UserModel existingUser = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuario nao encontrado"));
 
-        return user;
+        existingUser.setAdministrador(userModel.getAdministrador());
+        existingUser.setNumeroTel(userModel.getNumeroTel());
+        existingUser.setNumeroResidencial(userModel.getNumeroResidencial());
+        existingUser.setEmail(userModel.getEmail());
+        existingUser.setNome(userModel.getNome());
+        existingUser.setSenha(userModel.getSenha());
+        existingUser.setSexo(userModel.getSexo());
+        existingUser.setCpf(userModel.getCpf());
+        existingUser.setCep(userModel.getCep());
+        existingUser.setRua(userModel.getRua());
+        existingUser.setCidade(userModel.getCidade());
+        existingUser.setUf(userModel.getUf());
+
+        return userRepository.save(existingUser);
     }
 }

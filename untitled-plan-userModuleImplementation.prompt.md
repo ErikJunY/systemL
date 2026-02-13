@@ -4,10 +4,27 @@ Plan: User Module Implementation (DRAFT)
 
 Steps
 
-1. Add Update: implement `PUT /user/{id}` and `updateUser` logic.
+1. ✅ Add Update: implement `PUT /user/{id}` and `updateUser` logic. **[CONCLUÍDO]**
    - Files: `src/main/java/br/com/lorenci/systeml/modules/user/controllers/UserController.java`, `src/main/java/br/com/lorenci/systeml/modules/user/service/UserService.java`.
    - Complexity: medium.
    - Why: completes CRUD.
+   - Status: Implementado com sucesso. Método PUT e lógica de atualização funcionando.
+
+1.1 Fix HTTP Semantics & Response Types (REVISÃO - Encontrado durante verificação):
+   - Files: `src/main/java/br/com/lorenci/systeml/modules/user/controllers/UserController.java`.
+   - Complexity: low.
+   - Why: Garantir consistência REST e melhorar qualidade do código.
+   - Problemas identificados:
+     * `getAllUsers()`: Usa `HttpStatus.ACCEPTED` (202) em vez de `200 OK` — deve retornar status correto para GET.
+     * `getById()`: Retorna `Optional<UserModel>` em ResponseEntity — não é ideal, deveria retornar `UserModel` diretamente ou `404`.
+     * `getByEmailOrCpf()`: Mesmo problema com `Optional<UserModel>` — quebra o padrão REST.
+     * Imports desnecessários: `import java.util.Optional;` pode ser removido após correção.
+   - Detalhes da correção:
+     * `getAllUsers()`: Mudar para `ResponseEntity.ok(users)` (200 OK).
+     * `getById()`: Retornar `ResponseEntity<UserModel>` e lançar exceção se não encontrado (sera convertida em 404 pelo handler).
+     * `getByEmailOrCpf()`: Mesmo tratamento — retornar `UserModel` diretamente, não `Optional`.
+     * `updateUser()`: ✅ Já está correto com `ResponseEntity.ok()`.
+   - Impacto: Melhor conformidade com padrões REST, respostas mais previsíveis para clientes, código mais limpo.
 
 2. Add Delete: implement `DELETE /user/{id}` with proper not-found handling.
    - Files: controller + service (same as above).

@@ -55,12 +55,14 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(users);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Optional<UserModel>> updateUser(@PathVariable Long id,
+    @PutMapping("/{id}")
+    public ResponseEntity<UserModel> updateUser(
+            @PathVariable Long id,
             @Valid @RequestBody UserModel userModel) {
 
-        Optional<UserModel> user = service.updateUser(id, userModel);
+        UserModel updatedUser = service.updateUser(id, userModel);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+        return ResponseEntity.ok(updatedUser);
     }
+
 }
